@@ -24,6 +24,10 @@ let Todo = mongoose.model('Todo', {
   reminder: {
     type: Date,
     default: null
+  },
+  _creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
   }
 });
 
