@@ -18,7 +18,11 @@ let Todo = mongoose.model('Todo', {
     default: false
   },
   completedAt: {
-    type: Number,
+    type: Date,
+    default: null
+  },
+  reminder: {
+    type: Date,
     default: null
   }
 });
