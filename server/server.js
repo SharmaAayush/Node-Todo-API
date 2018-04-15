@@ -104,7 +104,7 @@ app.patch('/todos/:id', [authenticate, authenticateEmail], (req, res) => {
     body.completedAt = null;
   }
 
-  if (_.isNumber(body.reminder)) {
+  if (!(new Date(body.reminder) == 'Invalid Date')) {
     body.reminder = new Date(body.reminder).getTime();
   } else {
     body.reminder = null;
@@ -185,11 +185,11 @@ app.get('/users/verify', (req, res) => {
     let isVerified = verificationID.toString() == user.emailVerificationLink.toString();
     if (!isVerified) {
       Promise.reject();
+    } else {
+      user.verifyEmail().then((user) => {
+        res.status(200).send({ user });
+      });
     }
-    // verify the email of user.
-    user.verifyEmail().then((user) => {
-      res.status(200).send({ user });
-    });
   }).catch((e) => {
     res.status(400).send({
       error: `Email Verificattion failed. Please request for another verification link.`
