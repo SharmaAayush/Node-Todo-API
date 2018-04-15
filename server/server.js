@@ -8,7 +8,7 @@ const { ObjectID } = require('mongodb');
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/todo');
 const { User } = require('./models/user');
-const { authenticate } = require('./middleware/authenticate');
+const { authenticate, authenticateEmail } = require('./middleware/authenticate');
 
 const app = express();
 
@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post('/todos', authenticate, (req, res) => {
+app.post('/todos', [authenticate, authenticateEmail], (req, res) => {
   var todo = new Todo({
     description: req.body.description,
     title: req.body.title,
@@ -33,7 +33,7 @@ app.post('/todos', authenticate, (req, res) => {
   })
 });
 
-app.get('/todos', authenticate, (req, res) => {
+app.get('/todos', [authenticate, authenticateEmail], (req, res) => {
   Todo.find({
     _creator: req.user._id
   }).then((todos) => {
@@ -46,7 +46,7 @@ app.get('/todos', authenticate, (req, res) => {
   });
 });
 
-app.get('/todos/:id', authenticate, (req, res) => {
+app.get('/todos/:id', [authenticate, authenticateEmail], (req, res) => {
   let id = req.params.id;
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
@@ -68,7 +68,7 @@ app.get('/todos/:id', authenticate, (req, res) => {
 
 });
 
-app.delete('/todos/:id', authenticate, (req, res) => {
+app.delete('/todos/:id', [authenticate, authenticateEmail], (req, res) => {
   let id = req.params.id;
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
@@ -90,7 +90,7 @@ app.delete('/todos/:id', authenticate, (req, res) => {
 
 });
 
-app.patch('/todos/:id', authenticate, (req, res) => {
+app.patch('/todos/:id', [authenticate, authenticateEmail], (req, res) => {
   let id = req.params.id;
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
@@ -175,7 +175,7 @@ app.get('/users/verify', (req, res) => {
   }
   verificationID = new ObjectID(verificationID);
   let timeDiff = new Date().getTime() - verificationID.getTimestamp().getTime();
-  let isLinkExpired = timeDiff/(60000) > 30;
+  let isLinkExpired = timeDiff / (60000) > 30;
   if (isLinkExpired) {
     return res.status(400).send({
       error: `Email Verification failed. Your email verification link has expired. Please request for another verifiaction link.`
@@ -188,7 +188,7 @@ app.get('/users/verify', (req, res) => {
     }
     // verify the email of user.
     user.verifyEmail().then((user) => {
-      res.status(200).send({user});
+      res.status(200).send({ user });
     });
   }).catch((e) => {
     res.status(400).send({
