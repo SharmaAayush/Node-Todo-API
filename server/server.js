@@ -1,3 +1,5 @@
+require('./config/config');
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,7 +12,7 @@ const { authenticate } = require('./middleware/authenticate');
 
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -107,17 +109,13 @@ app.patch('/todos/:id', authenticate, (req, res) => {
   } else {
     body.reminder = null;
   }
-  console.log('\x1b[33m%s\x1b[0m', `{
-    _id: ${id},
-    _creator: ${req.user._id}
-  }`);
 
   Todo.findOneAndUpdate({
     _id: id,
     _creator: req.user._id
   }, {
-    $set: body
-  }, {
+      $set: body
+    }, {
       new: true
     }).then((todo) => {
       if (!todo) {
@@ -150,7 +148,7 @@ app.get('/users/me', authenticate, (req, res) => {
 
 app.post('/users/login', (req, res) => {
   let body = _.pick(req.body, ['email', 'password']);
-  
+
   User.findByCredentials(body.email, body.password).then((user) => {
     return user.generateAuthToken().then((token) => {
       res.header('x-auth', token).status(200).send(user);
@@ -158,6 +156,45 @@ app.post('/users/login', (req, res) => {
   }).catch((e) => {
     res.status(400).send();
   })
+});
+
+app.get('/users/emailverification', authenticate, (req, res) => {
+  let user = req.user;
+  user.getEmailVerificationLink().then(() => {
+    res.status(200).send();
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
+app.get('/users/verify', (req, res) => {
+  let email = req.query.email;
+  let verificationID = req.query.vk;
+  if (!ObjectID.isValid(verificationID)) {
+    return res.status(400).send();
+  }
+  verificationID = new ObjectID(verificationID);
+  let timeDiff = new Date().getTime() - verificationID.getTimestamp().getTime();
+  let isLinkExpired = timeDiff/(60000) > 30;
+  if (isLinkExpired) {
+    return res.status(400).send({
+      error: `Email Verification failed. Your email verification link has expired. Please request for another verifiaction link.`
+    });
+  }
+  User.findByEmail(email).then((user) => {
+    let isVerified = verificationID.toString() == user.emailVerificationLink.toString();
+    if (!isVerified) {
+      Promise.reject();
+    }
+    // verify the email of user.
+    user.verifyEmail().then((user) => {
+      res.status(200).send({user});
+    });
+  }).catch((e) => {
+    res.status(400).send({
+      error: `Email Verificattion failed. Please request for another verification link.`
+    });
+  });
 });
 
 app.delete('/users/me/token', authenticate, (req, res) => {

@@ -3,6 +3,11 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
+const { ObjectID } = require('mongodb');
+const { Schema } = mongoose;
+
+// remove this
+const { mySendMail } = require('../mailer_service/mailer_service');
 
 let UserSchema = new mongoose.Schema({
   username: {
@@ -40,7 +45,11 @@ let UserSchema = new mongoose.Schema({
       type: String,
       required: true
     }
-  }]
+  }],
+  emailVerificationLink: {
+    type: Schema.Types.ObjectId,
+    default: null
+  }
 });
 
 UserSchema.methods.toJSON = function () {
@@ -55,7 +64,7 @@ UserSchema.methods.generateAuthToken = function () {
   let token = jwt.sign({
     _id: user._id.toHexString(),
     access
-  }, 'abc123').toString();
+  }, process.env.JWT_SECRET).toString();
 
   user.tokens = user.tokens.concat([{ access, token }]);
 
@@ -74,12 +83,43 @@ UserSchema.methods.removeToken = function (token) {
   });
 };
 
+UserSchema.methods.getEmailVerificationLink = function () {
+  let user = this;
+  let emailVerificationLink = new ObjectID();
+  user.emailVerificationLink = emailVerificationLink;
+  return user.save().then(() => {
+    let mailVerificationLink = `http://localhost:3000/users/verify?email=${user.email}&vk=${emailVerificationLink}`;
+    mySendMail(user.email, mailVerificationLink);
+  });
+};
+
+UserSchema.statics.findByEmail = function (email) {
+  let User = this;
+
+  return User.findOne({
+    email: email
+  }).then((doc) => {
+    if (!doc) {
+      return Promise.reject();
+    }
+    return doc;
+  });
+};
+
+UserSchema.methods.verifyEmail = function () {
+  let user = this;
+  user.emailVarified = true;
+  return user.save().then(() => {
+    return user;
+  });
+}
+
 UserSchema.statics.findByToken = function (token) {
   let User = this;
   let decoded = undefined;
 
   try {
-    decoded = jwt.verify(token, 'abc123');
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (e) {
     return Promise.reject('Invalid Token was used');
   }
