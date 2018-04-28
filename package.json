@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/server.js",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
-    "test-watch": "nodemon --exec \"npm test\""
+    "test-watch": "nodemon --exec \"npm test\"",
+    "devServer": "nodemon server/server.js"
   },
   "author": "Ayush",
   "license": "ISC",
@@ -22,5 +23,8 @@
     "nodemailer": "^4.6.4",
     "sendmail": "^1.4.1",
     "validator": "^5.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
   }
 }

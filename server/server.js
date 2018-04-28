@@ -9,6 +9,7 @@ const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/todo');
 const { User } = require('./models/user');
 const { authenticate, authenticateEmail } = require('./middleware/authenticate');
+const { sendReminders } = require('./scheduler/scheduler');
 
 const app = express();
 
@@ -20,9 +21,14 @@ app.post('/todos', [authenticate, authenticateEmail], (req, res) => {
   var todo = new Todo({
     description: req.body.description,
     title: req.body.title,
-    reminder: req.body.reminder,
     _creator: req.user._id
   });
+
+  if (!(new Date(req.body.reminder) == 'Invalid Date')) {
+    todo.reminder = new Date(req.body.reminder).getTime();
+  } else {
+    todo.reminder = null;
+  }
 
   todo.save().then((doc) => {
     console.log('\x1b[34m%s\x1b[0m', `Added a new Todo ${todo}`);
@@ -204,6 +210,10 @@ app.delete('/users/me/token', authenticate, (req, res) => {
     res.status(400).send();
   })
 });
+
+sendReminders();
+
+setInterval(sendReminders, 299950);
 
 app.listen(PORT, () => {
   console.log('\x1b[32m%s\x1b[0m', `Server running on port ${PORT}`);
