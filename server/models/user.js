@@ -88,7 +88,7 @@ UserSchema.methods.getEmailVerificationLink = function () {
   let emailVerificationLink = new ObjectID();
   user.emailVerificationLink = emailVerificationLink;
   return user.save().then(() => {
-    let mailVerificationLink = `http://localhost:3000/users/verify?email=${user.email}&vk=${emailVerificationLink}`;
+    let mailVerificationLink = `${process.env.URL}users/verify?email=${user.email}&vk=${emailVerificationLink}`;
     mySendMail(user.email, mailVerificationLink);
   });
 };
