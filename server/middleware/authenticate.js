@@ -8,10 +8,6 @@ let authenticate = (req, res, next) => {
       return Promise.reject();
     }
 
-    // if (!user.emailVarified) {
-    //   return Promise.reject('Email is not verified');
-    // }
-
     req.user = user;
     req.token = token;
     next();

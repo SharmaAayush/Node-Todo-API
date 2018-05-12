@@ -198,7 +198,7 @@ app.get('/users/verify', (req, res) => {
     }
   }).catch((e) => {
     res.status(400).send({
-      error: `Email Verificattion failed. Please request for another verification link.`
+      error: `Email Verification failed. Please request for another verification link.`
     });
   });
 });
@@ -218,3 +218,5 @@ setInterval(sendReminders, 299950);
 app.listen(PORT, () => {
   console.log('\x1b[32m%s\x1b[0m', `Server running on port ${PORT}`);
 });
+
+module.exports.app = app;

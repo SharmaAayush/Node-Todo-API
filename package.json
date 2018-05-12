@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha **/*.spec.js",
     "test-watch": "nodemon --exec \"npm test\"",
     "devServer": "nodemon server/server.js"
   },
@@ -25,6 +25,9 @@
     "validator": "^5.6.0"
   },
   "devDependencies": {
-    "nodemon": "^1.17.3"
+    "expect": "^21.1.0",
+    "mocha": "^3.0.0",
+    "nodemon": "^1.17.3",
+    "supertest": "^2.0.0"
   }
 }
