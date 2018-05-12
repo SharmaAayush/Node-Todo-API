@@ -190,7 +190,7 @@ app.get('/users/verify', (req, res) => {
   User.findByEmail(email).then((user) => {
     let isVerified = verificationID.toString() == user.emailVerificationLink.toString();
     if (!isVerified) {
-      Promise.reject();
+      return Promise.reject();
     } else {
       user.verifyEmail().then((user) => {
         res.status(200).send({ user });
