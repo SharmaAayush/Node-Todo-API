@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "postinstall": "npm test",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha **/*.spec.js",
     "test-report": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha **/*.spec.js -R mochawesome",
     "test-watch": "nodemon --exec \"npm test\"",
