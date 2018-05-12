@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha **/*.spec.js",
+    "test-report": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha **/*.spec.js -R mochawesome",
     "test-watch": "nodemon --exec \"npm test\"",
     "devServer": "nodemon server/server.js"
   },
@@ -27,6 +28,7 @@
   "devDependencies": {
     "expect": "^21.1.0",
     "mocha": "^3.0.0",
+    "mochawesome": "^3.0.2",
     "nodemon": "^1.17.3",
     "supertest": "^2.0.0"
   }
