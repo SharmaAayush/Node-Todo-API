@@ -4,7 +4,6 @@ const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
-const path = require('path');
 
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/todo');
@@ -210,12 +209,6 @@ app.delete('/users/me/token', authenticate, (req, res) => {
   }, (e) => {
     res.status(400).send();
   })
-});
-
-app.use(express.static(path.join(__dirname + './../mochawesome-report')));
-
-app.get('/test-report', (req, res) => {
-  res.sendFile(path.join(__dirname + './../mochawesome-report/mochawesome.html'));
 });
 
 sendReminders();
