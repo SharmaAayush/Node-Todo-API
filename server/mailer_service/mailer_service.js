@@ -37,9 +37,7 @@ let mySendMail = (reciver, verificationLink) => {
   };
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
-      console.error(err);
-    } else {
-      console.log(`Email sent: ${info.response}`);
+      console.warn(err);
     }
   });
 }
@@ -77,9 +75,7 @@ let sendReminderMail = function (reciver, title, description) {
   };
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
-      console.error(err);
-    } else {
-      console.log(`Email sent: ${info.response}`);
+      console.warn(err);
     }
   });
 }

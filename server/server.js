@@ -38,7 +38,6 @@ app.post('/todos', [authenticate, authenticateEmail], (req, res) => {
   }
 
   todo.save().then((doc) => {
-    console.log('\x1b[34m%s\x1b[0m', `Added a new Todo ${todo}`);
     res.status(200).send(doc);
   }, (e) => {
     console.log(`\x1b[31m%s\x1b[0m`, `An error occured on POST /todos: ${e}`);

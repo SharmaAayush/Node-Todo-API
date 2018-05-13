@@ -24,12 +24,12 @@ describe('User Route Tests', () => {
         .post('/users')
         .send({username, email, password})
         .expect(200)
-        .end((err) => {
+        .end((err, res) => {
           if (err) {
             return done(err);
           }
 
-          User.findOne({email}).then((user) => {
+          User.findById(res.body._id).then((user) => {
             expect(user).toBeTruthy();
             expect(user.password).not.toBe(password);
             expect(user.username).toBe(username);

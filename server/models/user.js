@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs');
 const { ObjectID } = require('mongodb');
 const { Schema } = mongoose;
 
-// remove this
 const { mySendMail } = require('../mailer_service/mailer_service');
 
 let UserSchema = new mongoose.Schema({
