@@ -32,6 +32,11 @@ app.post('/todos', [authenticate, authenticateEmail], (req, res) => {
     todo.reminder = null;
   }
 
+  if (_.isBoolean(req.body.completed) && req.body.completed) {
+    todo.completed = true;
+    todo.completedAt = new Date().getTime();
+  }
+
   todo.save().then((doc) => {
     console.log('\x1b[34m%s\x1b[0m', `Added a new Todo ${todo}`);
     res.status(200).send(doc);
