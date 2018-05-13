@@ -80,8 +80,8 @@ An example user data object would be like this:
 ```
 {
   "username": "exampleUserName",
-	"email" : "example@example.com",
-	"password" : "password!"
+  "email" : "example@example.com",
+  "password" : "password!"
 }
 ```
 - The `username` field is required and must be atleast 5 characters long.
@@ -108,8 +108,8 @@ The user data object requires two fields namely `email`, and `password`.
 An example user data object would be like this:
 ```
 {
-	"email" : "example@example.com",
-	"password" : "password!"
+  "email" : "example@example.com",
+  "password" : "password!"
 }
 ```
 
@@ -150,7 +150,7 @@ This route is used to save the `todo` in the database. Simply pass the `todo` in
 The todo object should be something like this:
 ```
 {
-	"title": "Some todo",
+  "title": "Some todo",
   "description": "description of the given Todo"
 }
 ```
