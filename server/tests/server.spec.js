@@ -916,8 +916,8 @@ describe('Todo Route Tests', () => {
             expect(data._id.toHexString()).toBe(res.body.todo._id);
             done();
           }).catch(e => done(e));
-        })
-    })
+        });
+    });
 
   });
 
