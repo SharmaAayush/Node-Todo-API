@@ -70,7 +70,7 @@ To run tests:
 
 ### USER Routes
 
-##### POST /users
+#### POST /users
 
 This is a **User Signup** route.
 Send the user data as a *JSON object* in the body of the request.
@@ -99,7 +99,7 @@ The response contains the partial user info namely the `_id` property which is t
 
 A jwt authentication token is also generated and sent as `x-auth` in the header of the response. This `x-auth` token can be used to access `Private routes` as long as the user does not logout.
 
-##### POST /users/login
+#### POST /users/login
 
 This is a **User Login** route.
 Send the user data as a *Json object* in the body of the request.
@@ -119,19 +119,19 @@ The response is same as that of the `POST /users` route.
 
 **Note** - The password sent should be the one used during signup and not the one saved in the database after salting and hashing.
 
-##### GET /users/me
+#### GET /users/me
 
 This is a `Private route` i.e., a valid `x-auth` header is required to access this route.
 
 The response is same as that of the `POST /users` route or `POST /users/login` route. The partial user object returned is the one to which the `x-auth` header belongs to.
 
-##### GET /users/emailverification
+#### GET /users/emailverification
 
 This is a `Private route` i.e., a valid `x-auth` header is required to access this route.
 
 Accessing this route will generate an email verification link and send it to the user's specified email address.
 
-##### DELETE /users/me/token
+#### DELETE /users/me/token
 
 This is a `Private route` i.e., a valid `x-auth` header is required to access this route.
 
@@ -143,7 +143,7 @@ To generate a new token simply use the **User Login** route again with valid use
 
 Todo routes are all private routes and need a valid `x-auth` header to access. In addition to a valid `x-auth` token, the email id of the user must be verified to allow access to these routes. If any these authentication fails, a 401 unauthorized access error will be returned.
 
-##### POST /todos
+#### POST /todos
 
 This route is used to save the `todo` in the database. Simply pass the `todo` in the body as a *JSON object* with appropriate headers.
 
@@ -167,7 +167,7 @@ Other allowed properties of a `todo` object are:
 
 The response contains the `todo` object as saved in the database.
 
-##### PATCH /todos/:id
+#### PATCH /todos/:id
 
 This route is used to update a todo in the database.
 
@@ -178,7 +178,7 @@ The `todo` object sent in the request is the same as that in `POST /todos`.
 
 The response contains the `todo` object as updated in the database.
 
-##### DELETE /todos/:id
+#### DELETE /todos/:id
 
 This route is used to remove a todo from the database.
 
@@ -188,13 +188,13 @@ The `todo` must belong to the user requesting to delete the `todo` otherwise the
 
 The response body will contain the deleted `todo`.
 
-##### GET /todos
+#### GET /todos
 
 This route is used to get all the `todos` related to the user whose `x-auth` token was passed in the header.
 
 The response contains `todos` array which contains all the `todo` created by the user whose `x-auth` token was passed in the header.
 
-##### GET /todos/:id
+#### GET /todos/:id
 
 This route is used to get a single todo by its `_id` property.
 
