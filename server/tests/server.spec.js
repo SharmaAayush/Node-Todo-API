@@ -8,10 +8,9 @@ const { User } = require('../models/user');
 const { Todo } = require('../models/todo');
 const { users, todos, populateUsers, populateTodos } = require('./seed/seed');
 
-beforeEach(populateUsers);
-beforeEach(populateTodos);
-
 describe('User Route Tests', () => {
+  beforeEach(populateUsers);
+  before(populateTodos);
 
   describe('POST /users', () => {
 
@@ -349,6 +348,8 @@ describe('User Route Tests', () => {
 });
 
 describe('Todo Route Tests', () => {
+  before(populateUsers);
+  beforeEach(populateTodos);
 
   describe('POST /todos', () => {
 
